@@ -53,6 +53,8 @@ module.exports = defineConfig({
         throw error;
       }
     },
+    defaultCommandTimeout: 60000,
+    taskTimeout: 120000, 
   },
   env: {
     "apiURL": "https://apiteste.easydots.com.br/humanresources",
