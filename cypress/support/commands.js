@@ -20,63 +20,60 @@ Cypress.Commands.add('loginAPI', (urlApi,username, password)=>{
 })
 
 Cypress.Commands.add('batePontoApiEvento', (type, quantidadeFuncionários)=>{
-  cy.task('queryDb', {query:' SELECT facial_key, nome'+ 
-                            ' FROM rh.tb_funcionario'+
-                            ` ORDER BY id DESC LIMIT ${quantidadeFuncionários}`}).then((result) =>{
-          expect(result).to.have.length.above(1);
-        
-          if(type == 1){
-            let count = 0;
-            result.forEach(item => {
-              cy.fixture("ipsAparelhos.json").then((ip)=>{
-                cy.fixture("jsonData.json")
-                  .then((file) => {
+  cy.fixture('funcionarios.json').then((funcionarios)=>{
+    if(type == 1){
+      let count = 0;
+      funcionarios.forEach(item => {
+        cy.fixture("ipsAparelhos.json").then((ip)=>{
+          cy.fixture("jsonData.json")
+            .then((file) => {
 
-                    file.dateTime = generateRandomTime()+'-3:00';
-                    file.AccessControllerEvent.name = item.nome;
-                    file.AccessControllerEvent.employeeNoString = item.facial_key;
-                    file.ipAddress = ip.Aparelhos.ips[count];
-                    file.macAddress = ip.Aparelhos.macAdress[count];
+              file.dateTime = generateRandomTime()+'-3:00';
+              file.AccessControllerEvent.name = item.nome;
+              file.AccessControllerEvent.employeeNoString = item.facial_key;
+              file.ipAddress = ip.Aparelhos.ips[count];
+              file.macAddress = ip.Aparelhos.macAdress[count];
 
-                    if(count == 0){
-                      cy.writeFile(`./cypress/fixtures/jsonData.json`, file);
-                    }else{
-                      cy.writeFile(`./cypress/fixtures/jsonData${count}.json`, file);
-                    }
-                    count++;
-                })
-              })
-            });
-          }else{
-            let count = 0;
-            result.forEach(item => {
-              cy.fixture("jsonData.json")
-              .then((file) => {
-                file.dateTime = generateRandomTime()+'-3:00';
-                file.AccessControllerEvent.name = item.nome;
-                file.AccessControllerEvent.employeeNoString = item.facial_key;                              
-
-                if(count == 0){
-                  cy.writeFile(`./cypress/fixtures/jsonData.json`, file);
-                }else{
-                  console.log('contagem: '+count);
-                  cy.writeFile(`./cypress/fixtures/jsonData${count}.json`, file);
-                }
-                count++;
-              })
-            });
-          }
-          
-          let incrementJson = 0;
-          result.forEach(() => {
-            if(incrementJson == 0){
-              fileReader(`jsonData.json`);
-            }else{
-              fileReader(`jsonData${incrementJson}.json`)
-            }
-            incrementJson++;
+              if(count == 0){
+                cy.writeFile(`./cypress/fixtures/jsonData.json`, file);
+              }else{
+                cy.writeFile(`./cypress/fixtures/jsonData${count}.json`, file);
+              }
+              count++;
           })
-        })      
+        })
+      });
+    }else{
+      let count = 0;
+      funcionarios.forEach(item => {
+        cy.fixture("jsonData.json")
+        .then((file) => {
+          file.dateTime = generateRandomTime()+'-3:00';
+          file.AccessControllerEvent.name = item.nome;
+          file.AccessControllerEvent.employeeNoString = item.facial_key;                              
+
+          if(count == 0){
+            cy.writeFile(`./cypress/fixtures/jsonData.json`, file);
+          }else{
+            console.log('contagem: '+count);
+            cy.writeFile(`./cypress/fixtures/jsonData${count}.json`, file);
+          }
+          count++;
+        })
+      });
+    }
+       
+    let incrementJson = 0;
+    funcionarios.forEach(() => {
+      if(incrementJson == 0){
+        fileReader(`jsonData.json`);
+      }else{
+        fileReader(`jsonData${incrementJson}.json`)
+      }
+      incrementJson++;
+    })
+
+  }) 
 })
 
 Cypress.Commands.add('addIps', ()=>{

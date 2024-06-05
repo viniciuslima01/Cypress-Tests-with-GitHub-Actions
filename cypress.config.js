@@ -9,24 +9,24 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       try {
         // Carregar variáveis de ambiente a partir do cypress.env.json
-        const envConfig = require('./cypress.env.json');
-        config.env = { ...config.env, ...envConfig };
+        // const envConfig = require('./cypress.env.json');
+        // config.env = { ...config.env, ...envConfig };
 
-        console.log('Database Config:', config.env.db);
+        // console.log('Database Config:', config.env.db);
+        // // Configurar a função de plugin de banco de dados
+        // on('task', {
+        //   queryDb: async ({query}) => {
+        //     const connection = config.env.db;
+        //     const db = pgp(connection);
 
-        // Configurar a função de plugin de banco de dados
+        //     return db.any(query)
+        //       .then(data => data)
+        //       .catch(error => {
+        //         console.error('ERROR:', error);
+        //         throw error;
+        //       });
+        //   },
         on('task', {
-          queryDb: async ({query}) => {
-            const connection = config.env.db;
-            const db = pgp(connection);
-
-            return db.any(query)
-              .then(data => data)
-              .catch(error => {
-                console.error('ERROR:', error);
-                throw error;
-              });
-          },
           deleteNumberedFixtures() {
             const fixturesDir = path.join('./cypress/fixtures');
             return new Promise((resolve, reject) => {
@@ -46,9 +46,9 @@ module.exports = defineConfig({
                     resolve(null);
                 });
             });
-          },
-      });
-      } catch (error) {
+          },          
+        })
+      }catch (error) {
         console.error('Setup Node Events Error:', error);
         throw error;
       }
