@@ -26,18 +26,3 @@ describe('API Test EasyConnect', () => {
     });
   })
 })
-
-function generateRandomTime(){
-  const randomHour = Math.floor(Math.random() * 18); // Hora aleatória (0-23)
-  const randomMinute = Math.floor(Math.random() * 60); // Minuto aleatório (0-59)
-  const randomSecond = Math.floor(Math.random() * 60); // Segundo aleatório (0-59)
-
-  // Crie um objeto Moment.js com a hora aleatória
-  const randomTime = moment().set({
-    'hour': randomHour,
-    'minute': randomMinute,
-    'second': randomSecond
-  });
-
-  return randomTime.format('YYYY-MM-DDTHH:mm:ss'); //Formato datetime: 'YYYY-MM-DD HH:mm:ss'
-}
