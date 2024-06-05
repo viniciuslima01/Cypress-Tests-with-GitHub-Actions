@@ -1,0 +1,38 @@
+{
+  "ipAddress": "192.168.100.0",
+  "portNo": 3002,
+  "protocol": "HTTP",
+  "macAddress": "E0:CA:3C:E7:0E:00",
+  "channelID": 1,
+  "dateTime": "2024-06-04T09:08:15-3:00",
+  "activePostCount": 1,
+  "eventType": "AccessControllerEvent",
+  "eventState": "active",
+  "eventDescription": "Access Controller Event",
+  "AccessControllerEvent": {
+    "deviceName": "Access Controller",
+    "majorEventType": 5,
+    "subEventType": 75,
+    "name": "Nome 100",
+    "cardReaderKind": 1,
+    "cardReaderNo": 1,
+    "verifyNo": 170,
+    "employeeNoString": "18271021",
+    "serialNo": 240,
+    "userType": "normal",
+    "currentVerifyMode": "cardOrFaceOrFp",
+    "frontSerialNo": 239,
+    "attendanceStatus": "undefined",
+    "label": "",
+    "statusValue": 1,
+    "mask": "no",
+    "picturesNumber": 1,
+    "purePwdVerifyEnable": true,
+    "FaceRect": {
+      "height": 0.444,
+      "width": 0.251,
+      "x": 0.344,
+      "y": 0.233
+    }
+  }
+}

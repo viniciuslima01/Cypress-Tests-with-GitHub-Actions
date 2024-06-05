@@ -1,0 +1,40 @@
+{
+  "ipAddress": "192.168.100.23",
+  "portNo": 3002,
+  "protocol": "HTTP",
+  "macAddress": "e0:ca:3c:e7:0e:67",
+  "channelID": 1,
+  "dateTime": "2024-06-03T12:32:17-3:00",
+  "activePostCount": 1,
+  "eventType": "AccessControllerEvent",
+  "eventState": "active",
+  "eventDescription": "Access Controller Event",
+  "AccessControllerEvent": {
+    "deviceName": "Access Controller",
+    "majorEventType": 5,
+    "subEventType": 75,
+    "name": "VINICIUS L SANTOS",
+    "cardReaderKind": 1,
+    "cardReaderNo": 1,
+    "verifyNo": 170,
+    "employeeNoString": "b8c4ff69",
+    "serialNo": 240,
+    "userType": "normal",
+    "currentVerifyMode": "cardOrFaceOrFp",
+    "frontSerialNo": 239,
+    "attendanceStatus": "undefined",
+    "label": "",
+    "statusValue": 1,
+    "mask": "no",
+    "picturesNumber": 1,
+    "purePwdVerifyEnable": true,
+    "FaceRect": {
+      "height": 0.444,
+      "width": 0.251,
+      "x": 0.344,
+      "y": 0.233
+    }
+  },
+  "name": "Nome 10",
+  "employeeNoString": "b3200d4e"
+}
