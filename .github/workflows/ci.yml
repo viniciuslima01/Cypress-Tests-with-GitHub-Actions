@@ -6,9 +6,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-          # Install dependencies
+      # Install dependencies
       - name: Install dependencies
         run: npm install
+      # Get public IP Address
+      - name: Get public IP address
+        run: |
+          curl ifconfig.me
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
