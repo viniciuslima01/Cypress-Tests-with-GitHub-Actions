@@ -1,5 +1,5 @@
 const { defineConfig } = require("cypress");
-const pgp = require('pg-promise')();
+const { install, ensureBrowserFlags } = require('cypress-log-to-output');
 const fs = require('fs');
 const path = require('path');
 
@@ -8,6 +8,10 @@ module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       try {
+            install(on, (type, event) => {
+              console.log(`[${type}] ${event.message}`);
+            });
+        
         // Carregar variáveis de ambiente a partir do cypress.env.json
         // const envConfig = require('./cypress.env.json');
         // config.env = { ...config.env, ...envConfig };
@@ -46,8 +50,13 @@ module.exports = defineConfig({
                     resolve(null);
                 });
             });
-          },          
+          },
+          log(message) {
+            console.log(message);
+            return null;
+          }
         })
+        return config;
       }catch (error) {
         console.error('Setup Node Events Error:', error);
         throw error;
@@ -59,6 +68,7 @@ module.exports = defineConfig({
   env: {
     "apiURL": "https://apiteste.easydots.com.br/humanresources",
     "username": "hv.vinicius",
-    "password": "20240524"
+    "password": "20240524",
+    "registros": 0
   }
 });

@@ -1,5 +1,7 @@
 const moment = require('moment');
 
+let count = Cypress.env('registros');
+
 Cypress.Commands.add('loginAPI', (urlApi,username, password)=>{
     cy.api({
         method: 'POST',
@@ -18,75 +20,56 @@ Cypress.Commands.add('loginAPI', (urlApi,username, password)=>{
         }
     })
 })
+Cypress.Commands.add('batePontoApiEvento', (type, quantidadeFuncionários) => {
+  cy.fixture('funcionarios.json').then((funcionarios) => {
+    let register = 0;
 
-Cypress.Commands.add('batePontoApiEvento', (type, quantidadeFuncionários)=>{
-  cy.fixture('funcionarios.json').then((funcionarios)=>{
-    if(type == 1){
-      let count = 0;
-      funcionarios.forEach(item => {
-        cy.fixture("ipsAparelhos.json").then((ip)=>{
-          cy.fixture("jsonData.json")
-            .then((file) => {
+    funcionarios.forEach(item => {
+      cy.fixture("jsonData.json").then((file) => {
+        file.dateTime = generateTimestamps(count);
+        file.AccessControllerEvent.name = item.nome;
+        file.AccessControllerEvent.employeeNoString = item.facial_key;
 
-              file.dateTime = generateRandomTime()+'-3:00';
-              file.AccessControllerEvent.name = item.nome;
-              file.AccessControllerEvent.employeeNoString = item.facial_key;
-              file.ipAddress = ip.Aparelhos.ips[count];
-              file.macAddress = ip.Aparelhos.macAdress[count];
+        if(type === 1){
+          cy.fixture("ipsAparelhos.json").then((ip) => {
+            file.ipAddress = ip.Aparelhos.ips[register];
+            file.macAddress = ip.Aparelhos.macAdress[register];
 
-              if(count == 0){
-                cy.writeFile(`./cypress/fixtures/jsonData.json`, file);
-              }else{
-                cy.writeFile(`./cypress/fixtures/jsonData${count}.json`, file);
-              }
-              count++;
-          })
-        })
-      });
-    }else{
-      let count = 0;
-      funcionarios.forEach(item => {
-        cy.fixture("jsonData.json")
-        .then((file) => {
-          file.dateTime = generateRandomTime()+'-3:00';
-          file.AccessControllerEvent.name = item.nome;
-          file.AccessControllerEvent.employeeNoString = item.facial_key;                              
+            const fileName = `jsonData${register}.json`;
 
-          if(count == 0){
-            cy.writeFile(`./cypress/fixtures/jsonData.json`, file);
-          }else{
-            console.log('contagem: '+count);
-            cy.writeFile(`./cypress/fixtures/jsonData${count}.json`, file);
-          }
+            cy.writeFile(`./cypress/fixtures/${fileName}`, file).then(() => {
+              cy.task('log', `Wrote file: ${fileName} with timestamp: ${file.dateTime}`);
+            });
+
+            // fileReader(fileName);
+
+            register++;
+            count++;
+          });
+        }else{
+          const fileName = `jsonData${register}.json`;
+
+          cy.writeFile(`./cypress/fixtures/${fileName}`, file).then(() => {
+            cy.task('log', `Wrote file: ${fileName} with timestamp: ${file.dateTime}`);
+          });
+
+          // fileReader(fileName);
+
+          register++;
           count++;
-        })
+        }
       });
-    }
-       
-    let incrementJson = 0;
-    funcionarios.forEach(() => {
-      if(incrementJson == 0){
-        fileReader(`jsonData.json`);
-      }else{
-        fileReader(`jsonData${incrementJson}.json`)
-      }
-      incrementJson++;
+    });
+    
+    funcionarios.forEach((_, index) => {
+      const fileName = `jsonData${index}.json`;
+      cy.fixture(`jsonData${index}.json`).then((file)=>{
+        cy.task('log', `Wrote file: ${fileName} with timestamp: ${file.dateTime}`);
+      })
+      fileReader(fileName);
     })
-
-  }) 
-})
-
-Cypress.Commands.add('addIps', ()=>{
-  const ips = [];
-  for(let i = 0; i < 255; i++){
-    ips.push(`192.168.100.${i}`);
-  }
-
-  cy.fixture('ipsAparelhos.json').then((file) => {
-    file.Aparelhos.ips = ips;
-    return cy.writeFile(`./cypress/fixtures/ipsAparelhos.json`, file);
-  });
-})
+  })
+});
 
 function fileReader(file){
   cy.fixture(file)
@@ -114,7 +97,7 @@ function fileReader(file){
       
       cy.api({
         method: 'POST',
-        url: 'https://1395-2804-fc-8d2c-fb00-f095-a47d-75b8-be72.ngrok-free.app/evento',
+        url: 'https://4d10-2804-fc-8d2c-fb00-b41d-6384-b67c-ff08.ngrok-free.app/evento',
         form: true,
         body: object,
       }).then((response) => {
@@ -124,21 +107,21 @@ function fileReader(file){
       });
   })
 }
+function generateTimestamps(count){
+  const now = new Date();
 
+  cy.task('log', 'registro: '+count);
+  
+  const newTimestamp = new Date(now.getTime() + count * 120000);// adiciona 1 minuto para cada registro
+  const year = newTimestamp.getFullYear();
+  const month = String(newTimestamp.getMonth() + 1).padStart(2, '0');// mês começa do 0
+  const day = String(newTimestamp.getDate()).padStart(2, '0');
+  const hours = String(newTimestamp.getHours()).padStart(2, '0');
+  const minutes = String(newTimestamp.getMinutes()).padStart(2, '0');
+  const seconds = String(newTimestamp.getSeconds()).padStart(2, '0');
+  
+  const formattedTimestamp = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}-03:00`;
 
-function generateRandomTime(){
-  const randomHour = Math.floor(Math.random() * 18); // Hora aleatória (0-23)
-  const randomMinute = Math.floor(Math.random() * 60); // Minuto aleatório (0-59)
-  const randomSecond = Math.floor(Math.random() * 60); // Segundo aleatório (0-59)
-
-  // Crie um objeto Moment.js com a hora aleatória
-  const randomTime = moment().set({
-    'hour': randomHour,
-    'minute': randomMinute,
-    'second': randomSecond
-  });
-
-  return randomTime.format('YYYY-MM-DDTHH:mm:ss'); //Formato datetime: 'YYYY-MM-DD HH:mm:ss'
+  return formattedTimestamp;
 }
-
 
