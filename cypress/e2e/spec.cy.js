@@ -9,11 +9,11 @@ describe('API Test EasyConnect', () => {
   })
 
   context('Teste de carga', ()=>{
-    it('Realizar batida de ponto para o mesmo aparelho', ()=>{
+    it.only('Realizar batida de ponto para o mesmo aparelho', ()=>{
       cy.batePontoApiEvento(0,120);
     })
 
-    it.only('Realizar batida de ponto em aparelhos diferentes', () =>{
+    it('Realizar batida de ponto em aparelhos diferentes', () =>{
       cy.batePontoApiEvento(1,120);
     });
   })

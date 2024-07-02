@@ -97,7 +97,7 @@ function fileReader(file){
       
       cy.api({
         method: 'POST',
-        url: 'https://4d10-2804-fc-8d2c-fb00-b41d-6384-b67c-ff08.ngrok-free.app/evento',
+        url: 'https://28f3-2804-fc-8d2c-fb00-557a-929b-512d-635d.ngrok-free.app/evento',
         form: true,
         body: object,
       }).then((response) => {
